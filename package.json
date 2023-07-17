@@ -1,0 +1,15 @@
+{
+  "name": "wp-miror",
+  "author": {
+    "email": "reactor@blogbooks.net",
+    "name": "reactor-coding",
+    "url": "https://github.com/reactor-coding"
+  },
+  "description": "See README.md",
+  "bugs": {
+    "url": "https://github.com/reactor-coding/bbs-miror/issues"
+  },
+  "dependencies": {
+    
+  }
+}

@@ -1,0 +1,60 @@
+on:
+  #push:
+  #  branches: [ main ]
+  #schedule:
+  #  - cron:  "0 * * * *"
+    # 一時間に一回
+
+jobs:
+  # サイト構築
+  build:
+    name: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 5
+    # 5分で処理が終わらなければ、このままではGithubに迷惑なので強制停止
+
+    steps:
+      - name: このリポジトリをクローン
+        uses: actions/checkout@v3.3.0
+      # このリポジトリをクローン
+
+      - name: nodejsをv18でセットアップ
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version: 18
+        # nodejsをv18でセットアップ
+
+      - name: 依存関係のインストール
+        run: npm install
+        # 依存関係のインストール
+
+      - name: ミラーサイトを構築
+        run: |
+          mkdir public
+          cd public
+          echo "publicディレクトリを作成しました"
+          node ../src/index.js
+          echo "生成しました"
+      
+      #- name: 正常にページが生成できたか確認
+      #  run: |
+      #    npm run check
+      #    echo "正常にページが生成されていることを確認しました"
+
+      - name: Github Pageのセットアップ
+        uses: actions/configure-pages@v3
+
+      - name: アーティファクト(?)のアップロード
+        uses: actions/upload-pages-artifact@v1
+        with:
+          # Upload entire repository
+          path: "public/"
+
+      - name: Github Pagesへデプロイ
+        id: deployment
+        uses: actions/deploy-pages@v1
